@@ -81,11 +81,17 @@ target_include_directories(vsgXchange
 )
 
 target_link_libraries(vsgXchange
-    PUBLIC
+    PRIVATE
         vsg::vsg
     PRIVATE
         ${EXTRA_LIBRARIES}
 )
+
+# assimp is built by the parent FetchContent and only belongs to assimpTargets.
+# export(vsgXchangeTargets) checks every linked dependency, so PRIVATE assimp must be in this export set too.
+if(TARGET assimp)
+    install(TARGETS assimp EXPORT ${PROJECT_NAME}Targets)
+endif()
 
 install(TARGETS vsgXchange ${INSTALL_TARGETS_DEFAULT_FLAGS})
 
